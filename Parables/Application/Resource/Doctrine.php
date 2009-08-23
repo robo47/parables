@@ -22,16 +22,16 @@ class Parables_Application_Resource_Doctrine
     {
         $options = $this->getOptions();
 
+        if (array_key_exists('paths', $options)) {
+            $this->_initPaths($options['paths']);
+        }
+
         if (array_key_exists('manager', $options)) {
             $this->_initManager($options['manager']);
         }
 
         if (array_key_exists('connections', $options)) {
             $this->_initConnections($options['connections']);
-        }
-
-        if (array_key_exists('paths', $options)) {
-            $this->_initPaths($options['paths']);
         }
 
         return $this->_resources;
@@ -48,6 +48,17 @@ class Parables_Application_Resource_Doctrine
             $this->_manager = Doctrine_Manager::getInstance();
         }
         return $this->_manager;
+    }
+
+    /**
+     * Initialize Doctrine paths
+     *
+     * @param   array $options
+     * @return  void
+     */
+    protected function _initPaths(array $options)
+    {
+        $this->_resources['paths'] = $options;
     }
 
     /**
@@ -97,17 +108,6 @@ class Parables_Application_Resource_Doctrine
     }
 
     /**
-     * Initializes Doctrine paths
-     *
-     * @param   array $options
-     * @return  void
-     */
-    protected function _initPaths(array $options)
-    {
-        $this->_resources['paths'] = $options;
-    }
-
-    /**
      * Set attributes of a Doctrine_Configurable instance
      *
      * @param   Doctrine_Configurable $object
@@ -134,13 +134,7 @@ class Parables_Application_Resource_Doctrine
 
             if ((Doctrine::ATTR_RESULT_CACHE == $attrIdx) || 
                 (Doctrine::ATTR_QUERY_CACHE == $attrIdx)) {
-                if (!$cache = $this->_getCache($value)) {
-                    require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception('Unable to 
-                        retrieve cache.');
-                }
-
-                $attrVal = $cache;
+                $attrVal = $this->_getCache($value);
             }
 
             $object->setAttribute($attrIdx, $attrVal);
