@@ -109,6 +109,8 @@ class Parables_Application_Resource_Doctrine
      */
     protected function _initConnections(array $options)
     {
+        $this->_resources['connections'] = array();
+
         foreach($options as $key => $value) {
             if ((!is_array($value)) || (!array_key_exists('dsn', $value))) {
                 require_once 'Zend/Application/Resource/Exception.php';
@@ -120,7 +122,7 @@ class Parables_Application_Resource_Doctrine
                 : $value['dsn'];
 
             $conn = $this->getManager()->openConnection($dsn, $key);
-            $this->_resources['connections'] = $key;
+            $this->_resources['connections'][] = $key;
             
             if (array_key_exists('attributes', $value)) {
                 $this->_setAttributes($conn, $value['attributes']);
@@ -156,9 +158,15 @@ class Parables_Application_Resource_Doctrine
             $attrIdx = $doctrineConstants[$key];
             $attrVal = $value;
 
-            if ((Doctrine::ATTR_RESULT_CACHE == $attrIdx) || 
-                (Doctrine::ATTR_QUERY_CACHE == $attrIdx)) {
+            if ((Doctrine::ATTR_RESULT_CACHE == $attrIdx) || (Doctrine::ATTR_QUERY_CACHE == $attrIdx)) {
                 $attrVal = $this->_getCache($value);
+            } else {
+                if (is_string($value)) {
+                    $value = strtoupper($value);
+                    if (array_key_exists($value, $doctrineConstants)) {
+                        $attrVal = $doctrineConstants[$value];
+                    }
+                }
             }
 
             $object->setAttribute($attrIdx, $attrVal);
