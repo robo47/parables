@@ -1,0 +1,21 @@
+Mon Aug 24 12:11:14 CDT 2009 MJL - Implemented experimental module-based model
+support for the Doctrine resource plugin.
+
+Please update your application.ini files such that paths are namespaced as in:
+
+resources.doctrine.paths.<namespace>.data_fixtures_path = APPLICATION_PATH "/../doctrine/data/fixtures"
+resources.doctrine.paths.<namespace>.migrations_path = APPLICATION_PATH "/../doctrine/migrations"
+resources.doctrine.paths.<namespace>.models_path = APPLICATION_PATH "/models"
+resources.doctrine.paths.<namespace>.models_generated_path = APPLICATION_PATH "/models/generated"
+resources.doctrine.paths.<namespace>.sql_path = APPLICATION_PATH "/../doctrine/data/sql"
+resources.doctrine.paths.<namespace>.yaml_schema_path = APPLICATION_PATH "/../doctrine/schema"
+
+Where <namespace> is an arbitrary name used to identify the set of paths.
+Using the name of the connection associated with that set of models might not
+be a bad idea for consistencies sake.
+
+While I would appreciate a more terse configuration throughout, I prefer a
+little verbosity when clarity is at issue. Unfortunately, cases such as this
+necessitate increased verbosity since there is no getting around the need for
+<namespace> in order to support modular models.
+

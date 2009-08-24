@@ -55,10 +55,36 @@ class Parables_Application_Resource_Doctrine
      *
      * @param   array $options
      * @return  void
+     *
+     * @todo Determine whether or not to load models
      */
     protected function _initPaths(array $options)
     {
-        $this->_resources['paths'] = $options;
+        $modelsPaths = array();
+
+        foreach ($options as $name => $paths) {
+            if (!is_array($paths)) {
+                require_once 'Zend/Application/Resource/Exception.php';
+                throw new Zend_Application_Resource_Exception('An array of paths was expected.');
+            }
+
+            foreach ($paths as $key => $value) {
+                $path = realpath($value);
+
+                if (!is_dir($path)) {
+                    require_once 'Zend/Application/Resource/Exception.php';
+                    throw new Zend_Application_Resource_Exception("Directory for $key, $value does not exist");
+                }
+
+                if ('models_path' == $key) {
+                    $modelsPaths[] = $path;
+                }
+
+                $this->_resources['paths'][$name][$key] = $path;
+            }
+        }
+
+        Doctrine::loadModels($modelsPaths);
     }
 
     /**
@@ -86,8 +112,7 @@ class Parables_Application_Resource_Doctrine
         foreach($options as $key => $value) {
             if ((!is_array($value)) || (!array_key_exists('dsn', $value))) {
                 require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception("A valid DSN is 
-                    required for connection $key.");
+                throw new Zend_Application_Resource_Exception("A valid DSN is required for connection $key.");
             }
 
             $dsn = (is_array($value['dsn']))
@@ -125,8 +150,7 @@ class Parables_Application_Resource_Doctrine
         foreach ($attributes as $key => $value) {
             if (!array_key_exists($key, $doctrineConstants)) {
                 require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception("$key is not a 
-                    valid attribute.");
+                throw new Zend_Application_Resource_Exception("$key is not a valid attribute.");
             }
 
             $attrIdx = $doctrineConstants[$key];
@@ -152,15 +176,13 @@ class Parables_Application_Resource_Doctrine
     {
         if (!array_key_exists('class', $options)) {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Missing class 
-                option.');
+            throw new Zend_Application_Resource_Exception('Missing class option.');
         }
 
         $class = $options['class'];
         if (!class_exists($class)) {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception(
-                "$class does not exist.");
+            throw new Zend_Application_Resource_Exception("$class does not exist.");
         }
 
         $cacheOptions = array();
@@ -170,6 +192,32 @@ class Parables_Application_Resource_Doctrine
         }
 
         return new $class($cacheOptions);
+    }
+
+    /**
+     * Retrieve model paths
+     *
+     * @param   array $options
+     * @return  array
+     */
+    protected function _getModelPaths(array $options)
+    {
+        foreach ($options as $pathName => $pathSet) {
+            if (!is_array($pathSet)) {
+                require_once 'Zend/Application/Resource/Exception.php';
+                throw new Zend_Application_Resource_Exception('An array of paths was expected.');
+            }
+
+            foreach ($pathSet as $pathKey => $pathValue) {
+                $path = realpath($pathValue);
+
+                if (!is_dir($path)) {
+                    require_once 'Zend/Application/Resource/Exception.php';
+                    throw new Zend_Application_Resource_Exception("$pathKey, $pathValue does not exist");
+                }
+
+            }
+        }
     }
 
     /**
@@ -186,8 +234,7 @@ class Parables_Application_Resource_Doctrine
         foreach ($options as $alias => $class) {
             if (!class_exists($class)) {
                 require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception(
-                    "$class does not exist.");
+                throw new Zend_Application_Resource_Exception("$class does not exist.");
             }
 
             $conn->addListener(new $class(), $alias);

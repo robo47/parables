@@ -1,38 +1,83 @@
 Parables is a collection of Zend Framework components and resources.
 
---------------------
+See parables-demo at http://github.com/mlurz71/parables-demo/tree for usage
+details.
 
-Application Resource Plugins:
+I welcome feedback and patches. Fork at will!!
 
-- Defaultnamespace provides initialization of the default session namespace
-
-- Doctrinemanager provides configuration of Doctrine_Manager
-
-- Doctrineconnections provides configuration of Doctrine_Connections
-
-- Doctrinepaths provides configuration of Doctrine paths
-
-- Doctype provides configuration of doctype declarations
-
-- Dojo provides configuration of Zend_Dojo
-
-- Headlinks provides configuration of <link> elements
-
-- Headmetas provides configuration of <meta> elements
-
-- Headscripts provides configuration of <script> elements
-
-- Headstyles provides configuration of <style> elements
-
-- Headtitles provides configuration of the <title> element
-
-- Log provides configuration of logging resources
+Here's a list of the current components. Some of these are more
+stable/complete than others. For now, see the code for details.
 
 --------------------
 
-Doctrine Log Writer logs data to a Doctrine_Table
+Application_Resource_Defaultnamespace provides initialization of the default
+session namespace
 
 --------------------
 
-Doctrine Session SaveHandler saves session data to a Doctrine_Table
+Application_Resource_Doctrine provides configuration of the Doctrine manager,
+connections and paths
+
+See the ZF proposal here:
+http://framework.zend.com/wiki/display/ZFPROP/Zend_Application_Resource_Doctrine+-+Matthew+Lurz
+
+--------------------
+
+Application_Resource_Doctype provides configuration of doctype declarations
+
+--------------------
+
+Application_Resource_Dojo provides configuration of Zend_Dojo
+
+--------------------
+
+Application_Resource_Headlinks provides configuration of <link> elements
+
+--------------------
+
+Application_Resource_Headmetas provides configuration of <meta> elements
+
+--------------------
+
+Application_Resource_Headscripts provides configuration of <script> elements
+
+--------------------
+
+Application_Resource_Headstyles provides configuration of <style> elements
+
+--------------------
+
+Application_Resource_Headtitles provides configuration of the <title> element
+
+--------------------
+
+Application_Resource_Includefilecache provides configuration of the include
+file cache
+
+--------------------
+
+Application_Resource_Jquery provides configuration of ZendX_Jquery
+
+--------------------
+
+Application_Resource_Log provides configuration of logging resources
+
+--------------------
+
+Log_Writer_Doctrine logs data to a Doctrine_Table
+
+See the ZF proposal here:
+http://framework.zend.com/wiki/display/ZFPROP/Zend_Log_Writer_Doctrine+-+Matthew+Lurz
+
+--------------------
+
+Plugin_DojoBuildGenerator is a front controller plugin to assist with
+automated build generation for Dojo.
+
+--------------------
+
+Session_SaveHandler_Doctrine saves session data to a Doctrine_Table
+
+See the ZF proposal here:
+http://framework.zend.com/wiki/display/ZFPROP/Zend_Session_SaveHandler_Doctrine+-+Matthew+Lurz
 

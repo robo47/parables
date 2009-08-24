@@ -44,22 +44,32 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     public function testPathsAreInitialized()
     {
-        $currentPath = realpath(__FILE__);
+        $currentPath = realpath(dirname((__FILE__)));
 
         $options = array(
             'paths' => array(
-                'data_fixtures_path'    => $currentPath . '/../../doctrine/data/fixtures',
-                'migrations_path'       => $currentPath . '/../../doctrine/migrations',
-                'models_path'           => $currentPath . '/../../doctrine/models',
-                'models_generated_path' => $currentPath . '/../../doctrine/models/generated',
-                'sql_path'              => $currentPath . '/../../doctrine/data/sql',
-                'yaml_schema_path'      => $currentPath . '/../../doctrine/schema',
-            ));
+                'test' => array(
+                    'data_fixtures_path'    => $currentPath . '/../_files/doctrine/data/fixtures',
+                    'migrations_path'       => $currentPath . '/../_files/doctrine/migrations',
+                    'models_path'           => $currentPath . '/../_files/doctrine/models',
+                    'models_generated_path' => $currentPath . '/../_files/doctrine/models/generated',
+                    'sql_path'              => $currentPath . '/../_files/doctrine/data/sql',
+                    'yaml_schema_path'      => $currentPath . '/../_files/doctrine/schema',
+                )
+            )
+        );
 
         $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
         $values = $resource->init();
         $this->assertArrayHasKey('paths', $values);
+        // $this->assertArrayHasKey('test', $values['paths']);
+        // $this->assertArrayHasKey('data_fixtures_path', $values['paths']['test']);
+        // $this->assertArrayHasKey('migrations_path', $values['paths']['test']);
+        // $this->assertArrayHasKey('models_path', $values['paths']['test']);
+        // $this->assertArrayHasKey('models_generated_path', $values['paths']['test']);
+        // $this->assertArrayHasKey('sql_path', $values['paths']['test']);
+        // $this->assertArrayHasKey('yaml_schema_path', $values['paths']['test']);
     }
 
     public function testManagerIsInitialized()
