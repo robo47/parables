@@ -195,32 +195,6 @@ class Parables_Application_Resource_Doctrine
     }
 
     /**
-     * Retrieve model paths
-     *
-     * @param   array $options
-     * @return  array
-     */
-    protected function _getModelPaths(array $options)
-    {
-        foreach ($options as $pathName => $pathSet) {
-            if (!is_array($pathSet)) {
-                require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception('An array of paths was expected.');
-            }
-
-            foreach ($pathSet as $pathKey => $pathValue) {
-                $path = realpath($pathValue);
-
-                if (!is_dir($path)) {
-                    require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception("$pathKey, $pathValue does not exist");
-                }
-
-            }
-        }
-    }
-
-    /**
      * Set connection listeners
      *
      * @param   Doctrine_Connection_Common $conn
