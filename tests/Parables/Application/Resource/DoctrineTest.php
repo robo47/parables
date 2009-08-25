@@ -121,7 +121,13 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $manager = $resource->getManager();
         foreach ($options['manager']['attributes'] as $key => $value) {
             $attrIdx = $doctrineConstants[strtoupper($key)];
-            $this->assertEquals($value, $manager->getAttribute($attrIdx));
+            $attrVal = $value;
+
+            if (array_key_exists(strtoupper($value), $doctrineConstants)) {
+                $attrVal = $doctrineConstants[strtoupper($value)];
+            }
+
+            $this->assertEquals($attrVal, $manager->getAttribute($attrIdx));
         }
     }
 
@@ -183,7 +189,13 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
         foreach ($options['connections']['demo']['attributes'] as $key => $value) {
             $attrIdx = $doctrineConstants[strtoupper($key)];
-            $this->assertEquals($value, $manager->getAttribute($attrIdx));
+            $attrVal = $value;
+
+            if (array_key_exists(strtoupper($value), $doctrineConstants)) {
+                $attrVal = $doctrineConstants[strtoupper($value)];
+            }
+
+            $this->assertEquals($attrVal, $manager->getAttribute($attrIdx));
         }
     }
 
