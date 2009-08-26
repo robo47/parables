@@ -55,36 +55,27 @@ class Parables_Application_Resource_Doctrine
      *
      * @param   array $options
      * @return  void
-     *
-     * @todo Determine whether or not to load models
      */
     protected function _initPaths(array $options)
     {
-        $modelsPaths = array();
-
-        foreach ($options as $name => $paths) {
-            if (!is_array($paths)) {
+        $this->_resources['paths'] = array();
+        foreach ($options as $key => $value) {
+            if (!is_array($value)) {
                 require_once 'Zend/Application/Resource/Exception.php';
                 throw new Zend_Application_Resource_Exception('An array of paths was expected.');
             }
 
-            foreach ($paths as $key => $value) {
-                $path = realpath($value);
+            foreach ($value as $subKey => $subVal) {
+                $path = realpath($subVal);
 
                 if (!is_dir($path)) {
                     require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception("Directory for $key, $value does not exist");
+                    throw new Zend_Application_Resource_Exception("Directory for $subKey, $subVal does not exist");
                 }
 
-                if ('models_path' == $key) {
-                    $modelsPaths[] = $path;
-                }
-
-                $this->_resources['paths'][$name][$key] = $path;
+                $this->_resources['paths'][$key][$subKey] = $path;
             }
         }
-
-        Doctrine::loadModels($modelsPaths);
     }
 
     /**
@@ -110,7 +101,6 @@ class Parables_Application_Resource_Doctrine
     protected function _initConnections(array $options)
     {
         $this->_resources['connections'] = array();
-
         foreach($options as $key => $value) {
             if ((!is_array($value)) || (!array_key_exists('dsn', $value))) {
                 require_once 'Zend/Application/Resource/Exception.php';
