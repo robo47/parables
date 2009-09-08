@@ -3,11 +3,6 @@ class Parables_Application_Resource_Doctrine
     extends Zend_Application_Resource_ResourceAbstract
 {
     /**
-     * @var Doctrine_Manager
-     */
-     protected $_manager = null;
-
-    /**
      * @var array
      */
      protected $_resources = array();
@@ -38,19 +33,6 @@ class Parables_Application_Resource_Doctrine
     }
 
     /**
-     * Retrieve the Doctrine_Manager instance
-     *
-     * @return  void
-     */
-    public function getManager()
-    {
-        if (null === $this->_manager) {
-            $this->_manager = Doctrine_Manager::getInstance();
-        }
-        return $this->_manager;
-    }
-
-    /**
      * Initialize Doctrine paths
      *
      * @param   array $options
@@ -62,18 +44,20 @@ class Parables_Application_Resource_Doctrine
         foreach ($options as $key => $value) {
             if (!is_array($value)) {
                 require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception('An array of paths was expected.');
+                throw new Zend_Application_Resource_Exception('Invalid paths settings.');
             }
 
             foreach ($value as $subKey => $subVal) {
-                $path = realpath($subVal);
+                if (!empty($subVal)) {
+                    $path = realpath($subVal);
 
-                if (!is_dir($path)) {
-                    require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception("Directory for $subKey, $subVal does not exist");
+                    if (!is_dir($path)) {
+                        require_once 'Zend/Application/Resource/Exception.php';
+                        throw new Zend_Application_Resource_Exception("$path does not exist");
+                    }
+
+                    $this->_resources['paths'][$key][$subKey] = $path;
                 }
-
-                $this->_resources['paths'][$key][$subKey] = $path;
             }
         }
     }
@@ -87,7 +71,8 @@ class Parables_Application_Resource_Doctrine
     protected function _initManager(array $options)
     {
         if (array_key_exists('attributes', $options)) {
-            $this->_setAttributes($this->getManager(), $options['attributes']);
+            $manager = Doctrine_Manager::getInstance();
+            $this->_setAttributes($manager, $options['attributes']);
         }
     }
 
@@ -101,17 +86,19 @@ class Parables_Application_Resource_Doctrine
     protected function _initConnections(array $options)
     {
         $this->_resources['connections'] = array();
+        $manager = Doctrine_Manager::getInstance();
+
         foreach($options as $key => $value) {
             if ((!is_array($value)) || (!array_key_exists('dsn', $value))) {
                 require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception("A valid DSN is required for connection $key.");
+                throw new Zend_Application_Resource_Exception("Invalid DSN for connection $key.");
             }
 
             $dsn = (is_array($value['dsn']))
                 ? $this->_buildDsnFromArray($value['dsn'])
                 : $value['dsn'];
 
-            $conn = $this->getManager()->openConnection($dsn, $key);
+            $conn = $manager->openConnection($dsn, $key);
             $this->_resources['connections'][] = $key;
             
             if (array_key_exists('attributes', $value)) {
@@ -132,8 +119,7 @@ class Parables_Application_Resource_Doctrine
      * @return  void
      * @throws  Zend_Application_Resource_Exception
      */
-    protected function _setAttributes(Doctrine_Configurable $object, array 
-        $attributes)
+    protected function _setAttributes(Doctrine_Configurable $object, array $attributes)
     {
         $reflect = new ReflectionClass('Doctrine');
         $doctrineConstants = $reflect->getConstants();
@@ -184,8 +170,7 @@ class Parables_Application_Resource_Doctrine
         }
 
         $cacheOptions = array();
-        if ((is_array($options['options'])) && (array_key_exists('options', 
-            $options))) {
+        if ((is_array($options['options'])) && (array_key_exists('options', $options))) {
             $cacheOptions = $options['options'];
         }
 
@@ -200,8 +185,7 @@ class Parables_Application_Resource_Doctrine
      * @return  void
      * @throws  Zend_Application_Resource_Exception
      */
-    protected function _setConnectionListeners(Doctrine_Connection_Common 
-        $conn, array $options)
+    protected function _setConnectionListeners(Doctrine_Connection_Common $conn, array $options)
     {
         foreach ($options as $alias => $class) {
             if (!class_exists($class)) {

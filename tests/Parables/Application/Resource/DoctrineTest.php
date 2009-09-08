@@ -118,7 +118,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $reflect = new ReflectionClass('Doctrine');
         $doctrineConstants = $reflect->getConstants();
 
-        $manager = $resource->getManager();
+        $manager = Doctrine_Manager::getInstance();
         foreach ($options['manager']['attributes'] as $key => $value) {
             $attrIdx = $doctrineConstants[strtoupper($key)];
             $attrVal = $value;
@@ -177,8 +177,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $resource->setBootstrap($this->bootstrap);
         $resource->init();
 
-        $manager = $resource->getManager();
-
+        $manager = Doctrine_Manager::getInstance();
         $connections = $manager->getConnections();
         foreach ($connections as $conn) {
             $this->assertTrue($conn instanceof Doctrine_Connection_Common);
