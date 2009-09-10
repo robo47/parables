@@ -15,6 +15,11 @@ class Parables_Application_Resource_Doctrine
      */
     public function init()
     {
+        if (1 !== (int) substr(Doctrine::VERSION, 0, 1)) {
+            require_once 'Zend/Application/Resource/Exception.php';
+            throw new Zend_Application_Resource_Exception('Support is limited to Doctrine 1.x.');
+        }
+
         $options = $this->getOptions();
 
         if (array_key_exists('paths', $options)) {
@@ -53,7 +58,7 @@ class Parables_Application_Resource_Doctrine
 
                     if (!is_dir($path)) {
                         require_once 'Zend/Application/Resource/Exception.php';
-                        throw new Zend_Application_Resource_Exception("$path does not exist");
+                        throw new Zend_Application_Resource_Exception("$subVal does not exist");
                     }
 
                     $this->_resources['paths'][$key][$subKey] = $path;
