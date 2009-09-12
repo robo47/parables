@@ -1,14 +1,21 @@
-<phpunit colors="true" convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true" convertWarningsToExceptions="true"
-    stopOnFailure="true" syntaxCheck="true">
+<phpunit colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnFailure="true"
+    syntaxCheck="true">
 
-    <testsuite name="Parables Library">
+    <testsuite name="Parables Test Suite">
         <directory>./Parables</directory>
     </testsuite>
 
     <logging>
-        <log type="coverage-html" target="./logs/report" charset="UTF-8"
-            yui="true" highlight="true" lowUpperBound="50"
+        <log type="coverage-html"
+            target="./logs/report"
+            charset="UTF-8"
+            yui="true"
+            highlight="true"
+            lowUpperBound="50"
             highLowerBound="80"/>
 
         <log type="testdox-html" target="./logs/testdox.html" />
