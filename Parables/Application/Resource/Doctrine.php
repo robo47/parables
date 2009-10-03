@@ -105,7 +105,7 @@ class Parables_Application_Resource_Doctrine
 
             $conn = $manager->openConnection($dsn, $key);
             $this->_resources['connections'][] = $key;
-            
+
             if (array_key_exists('attributes', $value)) {
                 $this->_setAttributes($conn, $value['attributes']);
             }
@@ -232,16 +232,6 @@ class Parables_Application_Resource_Doctrine
      */
     protected function _buildDsnOptionsFromArray(array $options)
     {
-        $optionsString  = '';
-
-        foreach ($options as $key => $value) {
-            if ($value == end($options)) {
-                $optionsString .= "$key=$value";
-            } else {
-                $optionsString .= "$key=$value&";
-            }
-        }
-
-        return $optionsString;
+    	return http_build_query($options);
     }
 }
