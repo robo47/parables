@@ -212,7 +212,7 @@ class Parables_Application_Resource_Doctrine
     {
         $options = null;
         if (array_key_exists('options', $dsn)) {
-            $options = $this->_buildDsnOptionsFromArray($dsn['options']);
+            $options = http_build_query($dsn['options']);
         }
 
         return sprintf('%s://%s:%s@%s/%s?%s',
@@ -222,16 +222,5 @@ class Parables_Application_Resource_Doctrine
             $dsn['hostspec'],
             $dsn['database'],
             $options);
-    }
-
-    /**
-     * Build the DSN options string from an array
-     *
-     * @param   array $options
-     * @return  string
-     */
-    protected function _buildDsnOptionsFromArray(array $options)
-    {
-    	return http_build_query($options);
     }
 }
