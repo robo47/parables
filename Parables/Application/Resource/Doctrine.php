@@ -106,11 +106,42 @@ class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_R
                 return new Doctrine_Cache_Apc();
 
             case 'db':
-                $cacheConn = Doctrine_Manager::connection(new PDO('sqlite::memory:'));
-                return new Doctrine_Cache_Db(array(
+                if (!array_key_exists('options', $options)) {
+                    throw new Zend_Application_Resource_Exception('Undefined db cache options.');
+                }
+
+                if (empty($options['options'])) {
+                    throw new Zend_Application_Resource_Exception('Invalid db cache options.');
+                }
+
+                if (!array_key_exists('dsn', $options['options'])) {
+                    throw new Zend_Application_Resource_Exception("Undefined db cache DSN.");
+                }
+
+                if (empty($options['options']['dsn'])) {
+                    throw new Zend_Application_Resource_Exception("Invalid db cache DSN.");
+                }
+
+                if (!array_key_exists('tableName', $options['options'])) {
+                    throw new Zend_Application_Resource_Exception("Undefined db cache table name.");
+                }
+
+                if (empty($options['options']['tableName'])) {
+                    throw new Zend_Application_Resource_Exception("Invalid db cache table name.");
+                }
+
+                $dsn = (is_array($options['options']['dsn']))
+                    ? $this->_buildDsnFromArray($options['options']['dsn'])
+                    : $options['options']['dsn'];
+
+                $cacheConn = Doctrine_Manager::connection($dsn);
+
+                $cache = new Doctrine_Cache_Db(array(
                     'connection' => $cacheConn,
-                    'tableName' => 'doctrine_cache',
+                    'tableName' => $options['options']['tableName'],
                 ));
+
+                return $cache;
 
             case 'memcache':
                 if (!array_key_exists('options', $options)) {
@@ -168,7 +199,7 @@ class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_R
             }
 
             if (empty($value['dsn'])) {
-                throw new Zend_Application_Resource_Exception("Empty DSN on $key.");
+                throw new Zend_Application_Resource_Exception("Invalid DSN on $key.");
             }
 
             $dsn = (is_array($value['dsn']))
