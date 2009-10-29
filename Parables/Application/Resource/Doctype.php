@@ -1,6 +1,5 @@
 <?php
-class Parables_Application_Resource_Doctype extends 
-    Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Doctype extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Zend_View
@@ -14,21 +13,10 @@ class Parables_Application_Resource_Doctype extends
      */
     public function init()
     {
-        $this->getBootstrap()->bootstrap('view');
-        $this->_view = $this->getBootstrap()->getResource('view');
-        $this->setDoctype();
-    }
-
-    /**
-     * Set doctype
-     *
-     * @return  void
-     */
-    public function setDoctype()
-    {
         $options = $this->getOptions();
         if (array_key_exists('doctype', $options)) {
-            $this->_view->doctype($options['doctype']);
+            $doctypeHelper = new Zend_View_Helper_Doctype();
+            $doctypeHelper->doctype($options['doctype']);
         }
     }
 }

@@ -5,28 +5,6 @@ reference application.
 
 I welcome feedback and patches. Fork at will!!
 
-Most of the components are application resource plugins that I threw together
-while working with and testing out Zend_Application.
-
-The only component that has receieved much attention thus far is the Doctrine
-application resource plugin. Unfortunately, I recently managed to hose a
-branch of this component (Don't even ask..in the end it undoubtedly boils down
-to operator error. I have much to learn about git). At any rate, I hope to
-rework those changes soon (within a month or so) and move on.
-
-Once that component is relatively stable for Doctrine 1.1, I intend to do a
-quick once over of the remaining components (with special attention given to
-those components for which I have submitted proposals).
-
-Down the road even further, I'd really like to work on a form generator for
-the sake of becoming more intimately familiar with Zend_Form as well as
-automating the task as much as possible. There are at least a few reference
-implementation out in the wild, so I may prefer to reuse one of these.
-
-At some point I would also like to take a full survery of any existing
-Doctrine/ZF work being done outside of the framework in an attempt to compile
-"best of breed" solutions to common challenges Doctrine/ZF developers face.
-
 --------------------
 
 Application_Resource_Defaultnamespace provides initialization of the default

@@ -21,8 +21,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $this->autoloader->setFallbackAutoloader(true);
 
         $this->application = new Zend_Application('testing');
-        $this->bootstrap = new 
-            Zend_Application_Bootstrap_Bootstrap($this->application);
+        $this->bootstrap = new Zend_Application_Bootstrap_Bootstrap($this->application);
         Zend_Controller_Front::getInstance()->resetInstance();
     }
 
@@ -42,73 +41,67 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         Zend_Loader_Autoloader::resetInstance();
     }
 
-    public function testPathsAreInitialized()
+    public function testInitializationReturnsParablesApplicationResourceDoctrine()
     {
-        $currentPath = realpath(dirname((__FILE__)));
-
-        $options = array(
-            'paths' => array(
-                'test' => array(
-                    'data_fixtures_path'    => $currentPath . '/../_files/doctrine/data/fixtures',
-                    'migrations_path'       => $currentPath . '/../_files/doctrine/migrations',
-                    'models_path'           => $currentPath . '/../_files/doctrine/models',
-                    'models_generated_path' => $currentPath . '/../_files/doctrine/models/generated',
-                    'sql_path'              => $currentPath . '/../_files/doctrine/data/sql',
-                    'yaml_schema_path'      => $currentPath . '/../_files/doctrine/schema',
-                )
-            )
-        );
-
+        $options = array();
         $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
-        $values = $resource->init();
-        $this->assertArrayHasKey('paths', $values);
-        // $this->assertArrayHasKey('test', $values['paths']);
-        // $this->assertArrayHasKey('data_fixtures_path', $values['paths']['test']);
-        // $this->assertArrayHasKey('migrations_path', $values['paths']['test']);
-        // $this->assertArrayHasKey('models_path', $values['paths']['test']);
-        // $this->assertArrayHasKey('models_generated_path', $values['paths']['test']);
-        // $this->assertArrayHasKey('sql_path', $values['paths']['test']);
-        // $this->assertArrayHasKey('yaml_schema_path', $values['paths']['test']);
+        $doctrine = $resource->init();
+
+        $this->assertThat(
+            $doctrine,
+            $this->isInstanceOf('Parables_Application_Resource_Doctrine')
+        );
     }
 
-    public function testManagerIsInitialized()
+    public function testInitializationInitializesManager()
     {
         $options = array(
             'manager' => array(
                 'attributes' => array(
-                    'attr_auto_accessor_override' => 1,
-                    'attr_auto_free_query_objects' => 1,
-                    // 'attr_autoload_table_classes' => 1,
-                    // 'attr_quote_identifier' => 1,
-                    // 'attr_use_dql_callbacks' => 1,
-                    // 'attr_use_native_enum' => 0,
-                    // 'attr_query_limit' => 0,
-                    //
-                    // 'attr_dbname_format' => 'appname_%s',
-                    //
-                    // 'attr_default_column_options' => array(
-                    //      'length' => 255,
-                    //      'notnull' => 1,
-                    //      'type' => 'string',
-                    //  ),
-                    //
-                    // 'attr_default_identifier_options => array(
-                    //      'length' => 16,
-                    //      'name' => '%s_id',
-                    //      'type' => 'string',
-                    //  ),
-                    //
-                    // 'attr_idxname_format' => '%s_index',
-                    // 'attr_seqname_format' => '%s_sequence',
-                    // 'attr_tblname_format' => '%s',
-                    //
+                    'attr_auto_accessor_override' => false,
+                    'attr_auto_free_query_objects' => false,
+                    'attr_autoload_table_classes' => false,
+                    // 'attr_cascade_saves' => true,
+                    // 'attr_collection_class' => 'Doctrine_Collection',
+                    // 'attr_create_tables' => true,
+                    'attr_decimal_places' => 2,
+                    'attr_default_column_options' => array(
+                        'type' => 'string',
+                        'length' => 255,
+                        'notnull' => true,
+                    ),
+                    'attr_default_identifier_options' => array(
+                        'name' => '%s_id',
+                        'type' => 'string',
+                        'length' => 16,
+                    ),
+                    'attr_default_param_namespace' => 'doctrine',
+                    // 'attr_def_text_length' => 4096,
+                    // 'attr_def_varchar_length' => 255,
+                    'attr_emulate_database' => false,
                     'attr_export' => 'export_all',
+                    'attr_fkname_format' => "%s",
+                    'attr_hydrate_overwrite' => true,
+                    'attr_idxname_format' => "%s_idx",
+                    'attr_load_references' => true,
                     'attr_model_loading' => 'model_loading_conservative',
-                    'attr_portability' => 'portability_all',
-                    'attr_validate' => 'validate_all',
-                )
-            )
+                    'attr_portability' => 'portability_none',
+                    // 'attr_query_class' => 'Doctrine_Query',
+                    'attr_query_limit' => 'limit_records',
+                    'attr_quote_identifier' => false,
+                    'attr_recursive_merge_fixtures' => false,
+                    'attr_seqcol_name' => 'id',
+                    'attr_seqname_format' => "%s_seq",
+                    // 'attr_table_class' => 'Doctrine_Table',
+                    // 'attr_tblclass_format' => "",
+                    'attr_tblname_format' => "%s",
+                    'attr_throw_exceptions' => true,
+                    'attr_use_dql_callbacks' => false,
+                    'attr_use_native_enum' => false,
+                    'attr_validate' => 'validate_none',
+                ),
+            ),
         );
 
         $resource = new Parables_Application_Resource_Doctrine($options);
@@ -131,46 +124,34 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function testConnectionsAreInitialized()
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+     */
+    public function testPassingInvalidManagerAttributeShouldRaiseException()
     {
         $options = array(
-            'connections' => array(
-                'demo' => array(
-                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
-                    'attributes' => array(
-                        'attr_auto_accessor_override' => 1,
-                        'attr_auto_free_query_objects' => 1,
-                        // 'attr_autoload_table_classes' => 1,
-                        // 'attr_quote_identifier' => 1,
-                        // 'attr_use_dql_callbacks' => 1,
-                        // 'attr_use_native_enum' => 0,
-                        // 'attr_query_limit' => 0,
-                        //
-                        // 'attr_dbname_format' => 'appname_%s',
-                        //
-                        // 'attr_default_column_options' => array(
-                        //      'length' => 255,
-                        //      'notnull' => 1,
-                        //      'type' => 'string',
-                        //  ),
-                        //
-                        // 'attr_default_identifier_options => array(
-                        //      'length' => 16,
-                        //      'name' => '%s_id',
-                        //      'type' => 'string',
-                        //  ),
-                        //
-                        // 'attr_idxname_format' => '%s_index',
-                        // 'attr_seqname_format' => '%s_sequence',
-                        // 'attr_tblname_format' => '%s',
-                        //
-                        'attr_export' => 'export_all',
-                        'attr_model_loading' => 'model_loading_conservative',
-                        'attr_portability' => 'portability_all',
-                        'attr_validate' => 'validate_all',
-                    )
-                )
-            )
+            'manager' => array(
+                'attributes' => array(
+                    'invalid' => 1,
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+
+    public function testInitializationInitializesManagerApcQueryCache()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_query_cache' => array(
+                        'driver' => 'apc',
+                    ),
+                ),
+            ),
         );
 
         $resource = new Parables_Application_Resource_Doctrine($options);
@@ -178,10 +159,348 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $resource->init();
 
         $manager = Doctrine_Manager::getInstance();
-        $connections = $manager->getConnections();
-        foreach ($connections as $conn) {
-            $this->assertTrue($conn instanceof Doctrine_Connection_Common);
-        }
+        $cache = $manager->getAttribute(Doctrine::ATTR_QUERY_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Apc')
+        );
+    }
+
+    public function testInitializationInitializesManagerDbQueryCache()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_query_cache' => array(
+                        'driver' => 'db',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $cache = $manager->getAttribute(Doctrine::ATTR_QUERY_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Db')
+        );
+    }
+
+    public function testInitializationInitializesManagerMemcacheQueryCache()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_query_cache' => array(
+                        'driver' => 'memcache',
+                        'options' => array(
+                            'servers' => array(
+                                'host' => 'localhost',
+                                'port' => 11211,
+                                'persistent' => true,
+                            ),
+                            'compression' => false,
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $cache = $manager->getAttribute(Doctrine::ATTR_QUERY_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Memcache')
+        );
+    }
+
+    /*
+    public function testInitializationInitializesManagerXcacheQueryCache()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_query_cache' => array(
+                        'driver' => 'xcache',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $cache = $manager->getAttribute(Doctrine::ATTR_QUERY_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Xcache')
+        );
+    }
+     */
+
+    public function testInitializationInitializesManagerApcResultCache()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_result_cache' => array(
+                        'driver' => 'apc',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $cache = $manager->getAttribute(Doctrine::ATTR_RESULT_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Apc')
+        );
+    }
+
+    public function testInitializationInitializesManagerDbResultCache()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_result_cache' => array(
+                        'driver' => 'db',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $cache = $manager->getAttribute(Doctrine::ATTR_RESULT_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Db')
+        );
+    }
+
+    public function testInitializationInitializesManagerMemcacheResultCache()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_result_cache' => array(
+                        'driver' => 'memcache',
+                        'options' => array(
+                            'servers' => array(
+                                'host' => 'localhost',
+                                'port' => 11211,
+                                'persistent' => true,
+                            ),
+                            'compression' => false,
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $cache = $manager->getAttribute(Doctrine::ATTR_RESULT_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Memcache')
+        );
+    }
+
+    /*
+    public function testInitializationInitializesManagerXcacheResultCache()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_result_cache' => array(
+                        'driver' => 'xcache',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $cache = $manager->getAttribute(Doctrine::ATTR_RESULT_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Xcache')
+        );
+    }
+     */
+
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+     */
+    public function testPassingUndefinedCacheDriverShouldRaiseException()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_query_cache' => array(
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+     */
+    public function testPassingUnsupportedCacheDriverShouldRaiseException()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_query_cache' => array(
+                        'driver' => 'array',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+     */
+    public function testPassingUndefinedMemcacheOptionsShouldRaiseException()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_query_cache' => array(
+                        'driver' => 'memcache',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+     */
+    public function testPassingInvalidMemcacheOptionsShouldRaiseException()
+    {
+        $options = array(
+            'manager' => array(
+                'attributes' => array(
+                    'attr_query_cache' => array(
+                        'driver' => 'memcache',
+                        'options' => array(),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+
+    public function testInitializationInitializesConnections()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_auto_accessor_override' => false,
+                        'attr_auto_free_query_objects' => false,
+                        'attr_autoload_table_classes' => false,
+                        // 'attr_cascade_saves' => true,
+                        // 'attr_collection_class' => 'Doctrine_Collection',
+                        // 'attr_create_tables' => true,
+                        'attr_decimal_places' => 2,
+                        'attr_default_column_options' => array(
+                            'type' => 'string',
+                            'length' => 255,
+                            'notnull' => true,
+                        ),
+                        'attr_default_identifier_options' => array(
+                            'name' => '%s_id',
+                            'type' => 'string',
+                            'length' => 16,
+                        ),
+                        'attr_default_param_namespace' => 'doctrine',
+                        // 'attr_def_text_length' => 4096,
+                        // 'attr_def_varchar_length' => 255,
+                        'attr_emulate_database' => false,
+                        'attr_export' => 'export_all',
+                        'attr_fkname_format' => "%s",
+                        'attr_hydrate_overwrite' => true,
+                        'attr_idxname_format' => "%s_idx",
+                        'attr_load_references' => true,
+                        'attr_model_loading' => 'model_loading_conservative',
+                        'attr_portability' => 'portability_none',
+                        // 'attr_query_class' => 'Doctrine_Query',
+                        'attr_query_limit' => 'limit_records',
+                        'attr_quote_identifier' => false,
+                        'attr_recursive_merge_fixtures' => false,
+                        'attr_seqcol_name' => 'id',
+                        'attr_seqname_format' => "%s_seq",
+                        // 'attr_table_class' => 'Doctrine_Table',
+                        // 'attr_tblclass_format' => "",
+                        'attr_tblname_format' => "%s",
+                        'attr_throw_exceptions' => true,
+                        'attr_use_dql_callbacks' => false,
+                        'attr_use_native_enum' => false,
+                        'attr_validate' => 'validate_none',
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
 
         $reflect = new ReflectionClass('Doctrine');
         $doctrineConstants = $reflect->getConstants();
@@ -194,48 +513,266 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
                 $attrVal = $doctrineConstants[strtoupper($value)];
             }
 
-            $this->assertEquals($attrVal, $manager->getAttribute($attrIdx));
+            $this->assertEquals($attrVal, $conn->getAttribute($attrIdx));
         }
     }
 
-    /**
-     * @expectedException Zend_Application_Resource_Exception
-     */
-    public function testMissingDsnException()
+    public function testInitializationInitializesConnectionApcQueryCache()
     {
         $options = array(
             'connections' => array(
                 'demo' => array(
-            )
-        ));
-
-        $resource = new Parables_Application_Resource_Doctrine($options);
-        $resource->setBootstrap($this->bootstrap);
-        $resource->init();
-    }
-
-    /**
-     * @expectedException Zend_Application_Resource_Exception
-     */
-    public function testInvalidManagerAttributeException()
-    {
-        $options = array(
-            'manager' => array(
-                'attributes' => array(
-                    'invalid' => 1,
-                )
-            )
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_query_cache' => array(
+                            'driver' => 'apc',
+                        ),
+                    ),
+                ),
+            ),
         );
 
         $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
         $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
+        $cache = $conn->getAttribute(Doctrine::ATTR_QUERY_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Apc')
+        );
     }
+
+    public function testInitializationInitializesConnectionDbQueryCache()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_query_cache' => array(
+                            'driver' => 'db',
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
+        $cache = $conn->getAttribute(Doctrine::ATTR_QUERY_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Db')
+        );
+    }
+
+    public function testInitializationInitializesConnectionMemcacheQueryCache()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_query_cache' => array(
+                            'driver' => 'memcache',
+                            'options' => array(
+                                'servers' => array(
+                                    'host' => 'localhost',
+                                    'port' => 11211,
+                                    'persistent' => true,
+                                ),
+                                'compression' => false,
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
+        $cache = $conn->getAttribute(Doctrine::ATTR_QUERY_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Memcache')
+        );
+    }
+
+    /*
+    public function testInitializationInitializesConnectionXcacheQueryCache()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_query_cache' => array(
+                            'driver' => 'xcache',
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
+        $cache = $conn->getAttribute(Doctrine::ATTR_QUERY_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Xcache')
+        );
+    }
+     */
+
+    public function testInitializationInitializesConnectionApcResultCache()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_result_cache' => array(
+                            'driver' => 'apc',
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
+        $cache = $conn->getAttribute(Doctrine::ATTR_RESULT_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Apc')
+        );
+    }
+
+    public function testInitializationInitializesConnectionDbResultCache()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_result_cache' => array(
+                            'driver' => 'db',
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
+        $cache = $conn->getAttribute(Doctrine::ATTR_RESULT_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Db')
+        );
+    }
+
+    public function testInitializationInitializesConnectionMemcacheResultCache()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_result_cache' => array(
+                            'driver' => 'memcache',
+                            'options' => array(
+                                'servers' => array(
+                                    'host' => 'localhost',
+                                    'port' => 11211,
+                                    'persistent' => true,
+                                ),
+                                'compression' => false,
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
+        $cache = $conn->getAttribute(Doctrine::ATTR_RESULT_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Memcache')
+        );
+    }
+
+    /*
+    public function testInitializationInitializesConnectionXcacheResultCache()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
+                    'attributes' => array(
+                        'attr_result_cache' => array(
+                            'driver' => 'xcache',
+                        ),
+                    ),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $manager = Doctrine_Manager::getInstance();
+        $conn = $manager->getConnection('demo');
+        $cache = $conn->getAttribute(Doctrine::ATTR_RESULT_CACHE);
+
+        $this->assertThat(
+            $cache,
+            $this->isInstanceOf('Doctrine_Cache_Xcache')
+        );
+    }
+     */
 
     /**
      * @expectedException Zend_Application_Resource_Exception
      */
-    public function testInvalidConnectionAttributeException()
+    public function testPassingInvalidConnectionAttributeShouldRaiseException()
     {
         $options = array(
             'connections' => array(
@@ -243,9 +780,9 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
                     'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
                     'attributes' => array(
                         'invalid' => 1,
-                    )
-                )
-            )
+                    ),
+                ),
+            ),
         );
 
         $resource = new Parables_Application_Resource_Doctrine($options);
@@ -256,77 +793,112 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     /**
      * @expectedException Zend_Application_Resource_Exception
      */
-    public function testMissingCacheClassException()
+    public function testPassingEmptyDsnShouldRaiseException()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(
+                    'dsn' => '',
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+     */
+    public function testPassingUndefinedDsnShouldRaiseException()
+    {
+        $options = array(
+            'connections' => array(
+                'demo' => array(),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+
+    /*
+    public function testInitializationInitializesPaths()
+    {
+        $options = array(
+            'paths' => array(
+                'demo' => array(
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $paths = $resource->getPaths();
+
+        $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $paths);
+        $this->assertArrayHasKey('demo', $paths);
+    }
+     */
+
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+    public function testPassingInvalidPathsShouldRaiseException()
+    {
+        $options = array(
+            'paths' => array(
+                'demo' => null,
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+     */
+
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+    public function testPassingNonexistentPathShouldRaiseException()
+    {
+        $options = array(
+            'paths' => array(
+                'demo' => array(
+                    'somekey' => 'somepath',
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+    }
+     */
+
+    /**
+     * @expectedException Zend_Application_Resource_Exception
+     */
+    public function testPassingInvalidListenerClassShouldRaiseException()
     {
         $options = array(
             'connections' => array(
                 'demo' => array(
                     'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
                     'attributes' => array(
-                        'attr_query_cache' => array(
-                            // 'class' => 'Doctrine_Cache_Memcache',
-                            'lifespan' => 3600,
-                            'options' => array(
-                                'servers' => array(
-                                    'host' => 'localhost',
-                                    'port' => '11211',
-                                    'persistent' => 1
-                                ),
-                                'compression' => 0,
-                            )
-                        )
-                    )
-                )
-            )
+                        'listeners' => array(
+                            'profiler' => 'Invalid_Listener',
+                        ),
+                    ),
+                ),
+            ),
         );
 
         $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
         $resource->init();
     }
-
-    /**
-     * @expectedException Zend_Application_Resource_Exception
-    public function testCacheClassDoesNotExistException()
-    {
-        $options = array(
-            'connections' => array(
-                'demo' => array(
-                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
-                    'attributes' => array(
-                        'attr_query_cache' => array(
-                            'class' => 'Invalid',
-                            'lifespan' => 3600,
-                            'options' => array(
-                                'servers' => array(
-                                    'host' => 'localhost',
-                                    'port' => '11211',
-                                    'persistent' => 1
-                                ),
-                                'compression' => 0,
-                            )
-                        )
-                    )
-                )
-            )
-        );
-
-        $resource = new Parables_Application_Resource_Doctrine($options);
-        $resource->setBootstrap($this->bootstrap);
-        $resource->init();
-    }
-     */
-
-    /**
-     * @expectedException Zend_Application_Resource_Exception
-    public function testInvalidListenerClassException()
-    {
-        $options = array(
-        ));
-
-        $resource = new Parables_Application_Resource_Doctrine($options);
-        $resource->setBootstrap($this->bootstrap);
-        $resource->init();
-    }
-     */
 }

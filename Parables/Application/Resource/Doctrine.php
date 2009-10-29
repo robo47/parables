@@ -1,209 +1,13 @@
 <?php
-class Parables_Application_Resource_Doctrine
-    extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var array
      */
-     protected $_resources = array();
+    protected $_paths = array();
 
     /**
-     * Defined by Zend_Application_Resource_Resource
-     *
-     * @return  void
-     * @throws  Zend_Application_Resource_Exception
-     */
-    public function init()
-    {
-        if (1 !== (int) substr(Doctrine::VERSION, 0, 1)) {
-            require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Support is limited to Doctrine 1.x.');
-        }
-
-        $options = $this->getOptions();
-
-        if (array_key_exists('paths', $options)) {
-            $this->_initPaths($options['paths']);
-        }
-
-        if (array_key_exists('manager', $options)) {
-            $this->_initManager($options['manager']);
-        }
-
-        if (array_key_exists('connections', $options)) {
-            $this->_initConnections($options['connections']);
-        }
-
-        return $this->_resources;
-    }
-
-    /**
-     * Initialize Doctrine paths
-     *
-     * @param   array $options
-     * @return  void
-     */
-    protected function _initPaths(array $options)
-    {
-        $this->_resources['paths'] = array();
-        foreach ($options as $key => $value) {
-            if (!is_array($value)) {
-                require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception('Invalid paths settings.');
-            }
-
-            foreach ($value as $subKey => $subVal) {
-                if (!empty($subVal)) {
-                    $path = realpath($subVal);
-
-                    if (!is_dir($path)) {
-                        require_once 'Zend/Application/Resource/Exception.php';
-                        throw new Zend_Application_Resource_Exception("$subVal does not exist");
-                    }
-
-                    $this->_resources['paths'][$key][$subKey] = $path;
-                }
-            }
-        }
-    }
-
-    /**
-     * Initialize the Doctrine_Manager
-     *
-     * @param   array $options
-     * @return  void
-     */
-    protected function _initManager(array $options)
-    {
-        if (array_key_exists('attributes', $options)) {
-            $manager = Doctrine_Manager::getInstance();
-            $this->_setAttributes($manager, $options['attributes']);
-        }
-    }
-
-    /**
-     * Initialize Doctrine connections
-     *
-     * @param   array $options
-     * @return  void
-     * @throws  Zend_Application_Resource_Exception
-     */
-    protected function _initConnections(array $options)
-    {
-        $this->_resources['connections'] = array();
-        $manager = Doctrine_Manager::getInstance();
-
-        foreach($options as $key => $value) {
-            if ((!is_array($value)) || (!array_key_exists('dsn', $value))) {
-                require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception("Invalid DSN for connection $key.");
-            }
-
-            $dsn = (is_array($value['dsn']))
-                ? $this->_buildDsnFromArray($value['dsn'])
-                : $value['dsn'];
-
-            $conn = $manager->openConnection($dsn, $key);
-            $this->_resources['connections'][] = $key;
-
-            if (array_key_exists('attributes', $value)) {
-                $this->_setAttributes($conn, $value['attributes']);
-            }
-
-            if (array_key_exists('listeners', $value)) {
-                $this->_setConnectionListeners($conn, $value['listeners']);
-            }
-        }
-    }
-
-    /**
-     * Set attributes of a Doctrine_Configurable instance
-     *
-     * @param   Doctrine_Configurable $object
-     * @param   array $attributes
-     * @return  void
-     * @throws  Zend_Application_Resource_Exception
-     */
-    protected function _setAttributes(Doctrine_Configurable $object, array $attributes)
-    {
-        $reflect = new ReflectionClass('Doctrine');
-        $doctrineConstants = $reflect->getConstants();
-
-        $attributes = array_change_key_case($attributes, CASE_UPPER);
-        foreach ($attributes as $key => $value) {
-            if (!array_key_exists($key, $doctrineConstants)) {
-                require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception("$key is not a valid attribute.");
-            }
-
-            $attrIdx = $doctrineConstants[$key];
-            $attrVal = $value;
-
-            if ((Doctrine::ATTR_RESULT_CACHE == $attrIdx) || (Doctrine::ATTR_QUERY_CACHE == $attrIdx)) {
-                $attrVal = $this->_getCache($value);
-            } else {
-                if (is_string($value)) {
-                    $value = strtoupper($value);
-                    if (array_key_exists($value, $doctrineConstants)) {
-                        $attrVal = $doctrineConstants[$value];
-                    }
-                }
-            }
-
-            $object->setAttribute($attrIdx, $attrVal);
-        }
-    }
-
-    /**
-     * Retrieve a Doctrine_Cache instance
-     *
-     * @param   array $options
-     * @return  Doctrine_Cache
-     * @throws  Zend_Application_Resource_Exception
-     */
-    protected function _getCache(array $options)
-    {
-        if (!array_key_exists('class', $options)) {
-            require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Missing class option.');
-        }
-
-        $class = $options['class'];
-        if (!class_exists($class)) {
-            require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception("$class does not exist.");
-        }
-
-        $cacheOptions = array();
-        if ((is_array($options['options'])) && (array_key_exists('options', $options))) {
-            $cacheOptions = $options['options'];
-        }
-
-        return new $class($cacheOptions);
-    }
-
-    /**
-     * Set connection listeners
-     *
-     * @param   Doctrine_Connection_Common $conn
-     * @param   array $options
-     * @return  void
-     * @throws  Zend_Application_Resource_Exception
-     */
-    protected function _setConnectionListeners(Doctrine_Connection_Common $conn, array $options)
-    {
-        foreach ($options as $alias => $class) {
-            if (!class_exists($class)) {
-                require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception("$class does not exist.");
-            }
-
-            $conn->addListener(new $class(), $alias);
-        }
-    }
-
-    /**
-     * Build the DSN string
+     * Build DSN string from an array
      *
      * @param   array $dsn
      * @return  string
@@ -222,5 +26,223 @@ class Parables_Application_Resource_Doctrine
             $dsn['hostspec'],
             $dsn['database'],
             $options);
+    }
+
+    /**
+     * Set attributes for a Doctrine_Configurable instance
+     *
+     * @param   Doctrine_Configurable $object
+     * @param   array $attributes
+     * @return  void
+     * @throws  Zend_Application_Resource_Exception
+     */
+    protected function _setAttributes(Doctrine_Configurable $object, array $attributes)
+    {
+        $reflect = new ReflectionClass('Doctrine');
+        $doctrineConstants = $reflect->getConstants();
+
+        $attributes = array_change_key_case($attributes, CASE_UPPER);
+
+        foreach ($attributes as $key => $value) {
+            if (!array_key_exists($key, $doctrineConstants)) {
+                throw new Zend_Application_Resource_Exception("Invalid attribute $key.");
+            }
+
+            $attrIdx = $doctrineConstants[$key];
+            $attrVal = $value;
+
+            if (Doctrine::ATTR_QUERY_CACHE == $attrIdx) {
+                $attrVal = $this->_getCache($value);
+            } elseif (Doctrine::ATTR_RESULT_CACHE == $attrIdx) {
+                $attrVal = $this->_getCache($value);
+            } else {
+                if (is_string($value)) {
+                    $value = strtoupper($value);
+                    if (array_key_exists($value, $doctrineConstants)) {
+                        $attrVal = $doctrineConstants[$value];
+                    }
+                }
+            }
+
+            $object->setAttribute($attrIdx, $attrVal);
+        }
+    }
+
+    /**
+     * Set connection listeners
+     *
+     * @param   Doctrine_Connection_Common $conn
+     * @param   array $options
+     * @return  void
+     * @throws  Zend_Application_Resource_Exception
+     */
+    protected function _setConnectionListeners(Doctrine_Connection_Common $conn, array $options)
+    {
+        foreach ($options as $alias => $class) {
+            if (!class_exists($class)) {
+                throw new Zend_Application_Resource_Exception("$class does not exist.");
+            }
+
+            $conn->addListener(new $class(), $alias);
+        }
+    }
+
+    /**
+     * Retrieve a Doctrine_Cache instance
+     *
+     * @param   array $options
+     * @return  Doctrine_Cache
+     * @throws  Zend_Application_Resource_Exception
+     */
+    protected function _getCache(array $options)
+    {
+        if (!array_key_exists('driver', $options)) {
+            throw new Zend_Application_Resource_Exception('Undefined cache driver.');
+        }
+
+        switch ($options['driver'])
+        {
+            case 'apc':
+                return new Doctrine_Cache_Apc();
+
+            case 'db':
+                $cacheConn = Doctrine_Manager::connection(new PDO('sqlite::memory:'));
+                return new Doctrine_Cache_Db(array(
+                    'connection' => $cacheConn,
+                    'tableName' => 'doctrine_cache',
+                ));
+
+            case 'memcache':
+                if (!array_key_exists('options', $options)) {
+                    throw new Zend_Application_Resource_Exception('Undefined memcache options.');
+                }
+
+                if (empty($options['options'])) {
+                    throw new Zend_Application_Resource_Exception('Invalid memcache options.');
+                }
+
+                return new Doctrine_Cache_Memcache($options['options']);
+
+            case 'xcache':
+                return new Doctrine_Cache_Xcache();
+
+            default:
+                throw new Zend_Application_Resource_Exception('Unsupported cache driver.');
+        }
+    }
+
+    /**
+     * Set manager level attributes
+     *
+     * @param   array $options
+     * @return  Parables_Application_Resource_Doctrine
+     */
+    public function setManager(array $options)
+    {
+        if (array_key_exists('attributes', $options)) {
+            $this->_setAttributes(
+                Doctrine_Manager::getInstance(),
+                $options['attributes']
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set connections and connection level attributes
+     *
+     * @param   array $options
+     * @return  Parables_Application_Resource_Doctrine
+     * @throws  Zend_Application_Resource_Exception
+     */
+    public function setConnections(array $options)
+    {
+        foreach($options as $key => $value) {
+            if (!is_array($value)) {
+                throw new Zend_Application_Resource_Exception("Invalid connection on $key.");
+            }
+                
+            if (!array_key_exists('dsn', $value)) {
+                throw new Zend_Application_Resource_Exception("Undefined DSN on $key.");
+            }
+
+            if (empty($value['dsn'])) {
+                throw new Zend_Application_Resource_Exception("Empty DSN on $key.");
+            }
+
+            $dsn = (is_array($value['dsn']))
+                ? $this->_buildDsnFromArray($value['dsn'])
+                : $value['dsn'];
+
+            $conn = Doctrine_Manager::connection($dsn, $key);
+
+            if (array_key_exists('attributes', $value)) {
+                $this->_setAttributes($conn, $value['attributes']);
+            }
+
+            if (array_key_exists('listeners', $value)) {
+                $this->_setConnectionListeners($conn, $value['listeners']);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Initialize Doctrine paths
+     *
+     * @param   array $options
+     * @return  Parables_Application_Resource_Doctrine
+     * @throws  Zend_Application_Resource_Exception
+    protected function setPaths(array $options)
+    {
+        foreach ($options as $key => $value) {
+            if (!is_array($value)) {
+                throw new Zend_Application_Resource_Exception("Invalid paths on $key.");
+            }
+
+            $this->_paths[$key] = array();
+ 
+            foreach ($value as $subKey => $subVal) {
+                if (!empty($subVal)) {
+                    $path = realpath($subVal);
+ 
+                    if (!is_dir($path)) {
+                        throw new Zend_Application_Resource_Exception("$subVal does not exist");
+                    }
+ 
+                    $this->_paths[$key][$subKey] = $path;
+                }
+            }
+        }
+
+        return $this;
+    }
+     */
+
+    /**
+     * Retrieve paths
+     *
+     * @return array
+    public function getPaths()
+    {
+        return $this->_paths;
+    }
+     */
+
+    /**
+     * Defined by Zend_Application_Resource_Resource
+     *
+     * @return  Parables_Application_Resource_Doctrine
+     * @throws  Zend_Application_Resource_Exception
+     */
+    public function init()
+    {
+        if (1 !== (int) substr(Doctrine::VERSION, 0, 1)) {
+            throw new Zend_Application_Resource_Exception('Doctrine version > 1.x not yet supported.');
+        }
+
+        return $this;
     }
 }

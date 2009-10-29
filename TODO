@@ -1,0 +1,17 @@
+Extension support
+
+Determine how to group apc v xcache tests since these extensions can't be
+loaded at the same time
+
+Determine how to test connection listeners
+
+Determine intent of and test unknown attributes
+    'attr_cache' => ,
+    'attr_cache_lifespan' =>,
+    'attr_cmpname_format' => ,
+    'attr_coll_limit' => ,
+    'attr_dbname_format' => ,
+    'attr_default_sequence' => ,
+    'attr_def_tablespace' => ,
+    'attr_field_case' => ,
+    'attr_name_prefix' => ,
