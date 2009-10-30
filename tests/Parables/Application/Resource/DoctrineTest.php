@@ -116,8 +116,11 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             $attrIdx = $doctrineConstants[strtoupper($key)];
             $attrVal = $value;
 
-            if (array_key_exists(strtoupper($value), $doctrineConstants)) {
-                $attrVal = $doctrineConstants[strtoupper($value)];
+            if (is_string($value)) {
+                $value = strtoupper($value);
+                if (array_key_exists($value, $doctrineConstants)) {
+                    $attrVal = $doctrineConstants[$value];
+                }
             }
 
             $this->assertEquals($attrVal, $manager->getAttribute($attrIdx));
@@ -649,8 +652,11 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             $attrIdx = $doctrineConstants[strtoupper($key)];
             $attrVal = $value;
 
-            if (array_key_exists(strtoupper($value), $doctrineConstants)) {
-                $attrVal = $doctrineConstants[strtoupper($value)];
+            if (is_string($value)) {
+                $value = strtoupper($value);
+                if (array_key_exists($value, $doctrineConstants)) {
+                    $attrVal = $doctrineConstants[$value];
+                }
             }
 
             $this->assertEquals($attrVal, $conn->getAttribute($attrIdx));
