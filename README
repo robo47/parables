@@ -7,11 +7,6 @@ I welcome feedback and patches. Fork at will!!
 
 --------------------
 
-Application_Resource_Defaultnamespace provides initialization of the default
-session namespace
-
---------------------
-
 Application_Resource_Doctrine provides configuration of the Doctrine manager,
 connections and paths
 
