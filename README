@@ -15,30 +15,6 @@ http://framework.zend.com/wiki/display/ZFPROP/Zend_Application_Resource_Doctrine
 
 --------------------
 
-Application_Resource_Doctype provides configuration of doctype declarations
-
---------------------
-
-Application_Resource_Headlinks provides configuration of <link> elements
-
---------------------
-
-Application_Resource_Headmetas provides configuration of <meta> elements
-
---------------------
-
-Application_Resource_Headscripts provides configuration of <script> elements
-
---------------------
-
-Application_Resource_Headstyles provides configuration of <style> elements
-
---------------------
-
-Application_Resource_Headtitles provides configuration of the <title> element
-
---------------------
-
 Application_Resource_Includefilecache provides configuration of the include
 file cache
 

@@ -171,6 +171,8 @@ class Parables_Application_Resource_Doctrine
      */
     public function setManager(array $options)
     {
+        $options = array_change_key_case($options, CASE_LOWER);
+
         if (array_key_exists('attributes', $options)) {
             $this->_setAttributes(
                 Doctrine_Manager::getInstance(),
@@ -190,6 +192,8 @@ class Parables_Application_Resource_Doctrine
      */
     public function setConnections(array $options)
     {
+        $options = array_change_key_case($options, CASE_LOWER);
+
         foreach($options as $key => $value) {
             if (!is_array($value)) {
                 throw new Zend_Application_Resource_Exception("Invalid connection on $key.");
@@ -229,6 +233,8 @@ class Parables_Application_Resource_Doctrine
      * @throws  Zend_Application_Resource_Exception
     protected function setPaths(array $options)
     {
+        $options = array_change_key_case($options, CASE_LOWER);
+
         foreach ($options as $key => $value) {
             if (!is_array($value)) {
                 throw new Zend_Application_Resource_Exception("Invalid paths on $key.");
@@ -256,7 +262,7 @@ class Parables_Application_Resource_Doctrine
     /**
      * Retrieve paths
      *
-     * @return array
+     * @return  array
     public function getPaths()
     {
         return $this->_paths;
