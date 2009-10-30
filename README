@@ -3,28 +3,38 @@ Parables is a collection of Zend Framework components and resources.
 See parables-demo at http://github.com/mlurz71/parables-demo/tree for a basic
 reference application.
 
+Fri Oct 30 11:23:57 CDT 2009 As some may notice, I removed a bunch of resource
+plugins. There were several reasons for this, but primarily:
+
+- A Dojo resource plugin has since been added to the framework making mine
+  obsolete (the one in the ZF is better anyhow)
+
+- In several cases I decided that the level of abstraction just wasn't
+  justified and so instead should be provided in a layout/view script, as an
+_init method, etc.
+
+Hopefully paring down the scope of the library will give me more time to work
+on the remaining components.
+
 I welcome feedback and patches. Fork at will!!
 
 --------------------
 
-Application_Resource_Doctrine provides configuration of the Doctrine manager,
-connections and paths
+Application_Resource_Doctrine provides Doctrine configuration and
+initialization.
 
 See the ZF proposal here:
 http://framework.zend.com/wiki/display/ZFPROP/Zend_Application_Resource_Doctrine+-+Matthew+Lurz
 
 --------------------
 
-Application_Resource_Includefilecache provides configuration of the include
-file cache
+Application_Resource_Jquery provides ZendX_Jquery configuration and
+initialization.
 
 --------------------
 
-Application_Resource_Jquery provides configuration of ZendX_Jquery
-
---------------------
-
-Application_Resource_Log provides configuration of logging resources
+Application_Resource_Log provides configuration and initialization of logging
+resources.
 
 --------------------
 
