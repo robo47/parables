@@ -1,5 +1,6 @@
 <?php
-class Parables_Application_Resource_Doctype extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Doctype 
+    extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * Initialize doctype

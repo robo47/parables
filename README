@@ -19,10 +19,6 @@ Application_Resource_Doctype provides configuration of doctype declarations
 
 --------------------
 
-Application_Resource_Dojo provides configuration of Zend_Dojo
-
---------------------
-
 Application_Resource_Headlinks provides configuration of <link> elements
 
 --------------------

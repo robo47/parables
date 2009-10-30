@@ -1,5 +1,6 @@
 <?php
-class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Doctrine 
+    extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var array
