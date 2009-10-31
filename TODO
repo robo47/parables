@@ -1,9 +1,8 @@
-Extension support
+Test resetting Doctrine instance for 1.2+
 
-Determine how to group apc v xcache tests since these extensions can't be
-loaded at the same time
+Implement Doctrine extension support
 
-Determine how to test connection listeners
+Determine how to test connection listener initialization
 
 Determine intent of and test unknown attributes
     'attr_cache' => ,

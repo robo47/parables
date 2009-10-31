@@ -1,15 +1,16 @@
 <?php
-class Parables_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
+class Parables_Log_Writer_Doctrine 
+    extends Zend_Log_Writer_Abstract
 {
     /**
-     * @var null|string
+     * @var string
      */
-    private $_modelClass = null;
+    protected $_modelClass = null;
 
     /**
-     * @var null|array
+     * @var array
      */
-    private $_columnMap = null;
+    protected $_columnMap = array();
 
     /**
      * Constructor
@@ -21,11 +22,16 @@ class Parables_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
      */
     public function __construct($modelClass, $columnMap = null)
     {
-        if ((!is_string($modelClass)) || (!class_exists($modelClass))) {
-            require_once 'Zend/Log/Exception.php';
+        if (!is_string($modelClass)) {
             throw new Zend_Log_Exception('Invalid model class.');
         }
+
+        if (!class_exists($modelClass)) {
+            throw new Zend_Log_Exception('Invalid model class.');
+        }
+
         $this->_modelClass = $modelClass;
+
         $this->_columnMap = $columnMap;
     }
 
@@ -38,7 +44,6 @@ class Parables_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
      */
     public function setFormatter($formatter)
     {
-        require_once 'Zend/Log/Exception.php';
         throw new Zend_Log_Exception('Formatting is not supported.');
     }
 
@@ -50,17 +55,18 @@ class Parables_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
      */
     protected function _write($event)
     {
-        $data = array();
+        $dataToInsert = array();
+
         if (null === $this->_columnMap) {
-            $data = $event;
+            $dataToInsert = $event;
         } else {
             foreach ($this->_columnMap as $columnName => $fieldKey) {
-                $data[$columnName] = $event[$fieldKey];
+                $dataToInsert[$columnName] = $event[$fieldKey];
             }
         }
 
         $entry = new $this->_modelClass();
-        $entry->fromArray($data);
+        $entry->fromArray($dataToInsert);
         $entry->save();
     }
 }
