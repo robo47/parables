@@ -1,5 +1,6 @@
 <?php
-class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_Interface
+class Parables_Session_SaveHandler_Doctrine 
+    implements Zend_Session_SaveHandler_Interface
 {
     const DATA_COLUMN           = 'dataColumn';
     const LIFETIME_COLUMN       = 'lifetimeColumn';
@@ -67,9 +68,7 @@ class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_
         if ($config instanceof Zend_Config) {
             $config = $config->toArray();
         } elseif (!is_array($config)) {
-            require_once 'Zend/Session/SaveHandler/Exception.php';
-            throw new Zend_Session_SaveHandler_Exception('Options must be an 
-                instance of Zend_Config or array.');
+            throw new Zend_Session_SaveHandler_Exception('Options must be an instance of Zend_Config or array.');
         }
 
         foreach ($config as $key => $value) {
@@ -128,9 +127,7 @@ class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_
     public function setLifetime($lifetime, $overrideLifetime = null)
     {
         if ($lifetime < 0) {
-            require_once 'Zend/Session/SaveHandler/Exception.php';
-            throw new Zend_Session_SaveHandler_Exception('Session lifetime 
-                must be greater than zero.');
+            throw new Zend_Session_SaveHandler_Exception('Session lifetime must be greater than zero.');
         } else if (empty($lifetime)) {
             $this->_lifetime = (int) ini_get('session.gc_maxlifetime');
         } else {
@@ -190,9 +187,7 @@ class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_
         if (is_string($key)) {
             $this->_primaryKeyColumn = $key;
         } else {
-            require_once 'Zend/Session/SaveHandler/Exception.php';
-            throw new Zend_Session_SaveHandler_Exception('Invalid primary key 
-                column.');
+            throw new Zend_Session_SaveHandler_Exception('Invalid primary key column.');
         }
 
         return $this;
