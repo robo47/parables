@@ -9,6 +9,11 @@ plugins. There were several reasons for this, but primarily:
 - A Dojo resource plugin has since been added to the framework making mine
   obsolete (the one in the ZF is better anyhow)
 
+- A Log resource plugin proposal has been submitted, and the added effort just
+  isn't justified. I think eventually a Log resource plugin will make it into
+the ZF. For now use an _init method and see
+http://framework.zend.com/wiki/pages/viewpage.action?pageId=16023777
+
 - In several cases I decided that the level of abstraction just wasn't
   justified and so instead should be provided in a layout/view script, as an
 _init method, etc.
@@ -30,11 +35,6 @@ http://framework.zend.com/wiki/display/ZFPROP/Zend_Application_Resource_Doctrine
 
 Application_Resource_Jquery provides ZendX_Jquery configuration and
 initialization.
-
---------------------
-
-Application_Resource_Log provides configuration and initialization of logging
-resources.
 
 --------------------
 
