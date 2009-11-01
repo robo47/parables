@@ -1,16 +1,22 @@
+Determine how to setup Dojo build generator options
+
+Test log writer, session save handler, jQuery resource plugin, Dojo build
+generator
+
+Test Doctrine connection listener initialization
+
 Test resetting Doctrine instance for 1.2+
+
+Test Doctrine 1.2 attributes
+ATTR_CACHE
+ATTR_CACHE_LIFESPAN
+ATTR_CMPNAME_FORMAT
+ATTR_COLL_LIMIT
+ATTR_DBNAME_FORMAT
+ATTR_DEFAULT_SEQUENCE
+ATTR_DEF_TABLESPACE
+ATTR_FIELD_CASE
+ATTR_NAME_PREFIX
 
 Implement Doctrine extension support
 
-Determine how to test connection listener initialization
-
-Determine intent of and test unknown attributes
-    'attr_cache' => ,
-    'attr_cache_lifespan' =>,
-    'attr_cmpname_format' => ,
-    'attr_coll_limit' => ,
-    'attr_dbname_format' => ,
-    'attr_default_sequence' => ,
-    'attr_def_tablespace' => ,
-    'attr_field_case' => ,
-    'attr_name_prefix' => ,
