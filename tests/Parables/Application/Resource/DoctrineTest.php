@@ -27,7 +27,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        // Restore original autoloaders
+		if (method_exists('Doctrine_Manager', 'resetInstance')) // as of 1.2ALPHA3
+			Doctrine_Manager::resetInstance();
+
+    	// Restore original autoloaders
         $loaders = spl_autoload_functions();
         foreach ($loaders as $loader) {
             spl_autoload_unregister($loader);
