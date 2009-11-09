@@ -231,6 +231,7 @@ class Parables_Application_Resource_Doctrine
      * @param   array $options
      * @return  Parables_Application_Resource_Doctrine
      * @throws  Zend_Application_Resource_Exception
+     */
     protected function setPaths(array $options)
     {
         $options = array_change_key_case($options, CASE_LOWER);
@@ -257,17 +258,18 @@ class Parables_Application_Resource_Doctrine
 
         return $this;
     }
-     */
+     
 
     /**
      * Retrieve paths
      *
      * @return  array
+     */
     public function getPaths()
     {
         return $this->_paths;
     }
-     */
+     
 
     /**
      * Defined by Zend_Application_Resource_Resource

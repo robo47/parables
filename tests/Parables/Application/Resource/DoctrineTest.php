@@ -1007,7 +1007,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $resource->init();
     }
 
-    /*
+    
     public function testInitializationInitializesPaths()
     {
         $options = array(
@@ -1026,10 +1026,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $this->assertType(PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $paths);
         $this->assertArrayHasKey('demo', $paths);
     }
-     */
 
     /**
      * @expectedException Zend_Application_Resource_Exception
+     */
     public function testPassingInvalidPathsShouldRaiseException()
     {
         $options = array(
@@ -1042,10 +1042,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $resource->setBootstrap($this->bootstrap);
         $resource->init();
     }
-     */
 
     /**
      * @expectedException Zend_Application_Resource_Exception
+     */
     public function testPassingNonexistentPathShouldRaiseException()
     {
         $options = array(
@@ -1060,8 +1060,25 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $resource->setBootstrap($this->bootstrap);
         $resource->init();
     }
-     */
 
+    public function testPassingCorrectPathOptionsAndGettingThem()
+    {
+        $options = array(
+            'paths' => array(
+                'demo' => array(
+                    'somekey' => dirname(__FILE__),
+                ),
+            ),
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $paths = $resource->getPaths();
+        
+        $this->assertEquals($options['paths'], $paths);
+    }
     /**
      * @expectedException Zend_Application_Resource_Exception
      */
