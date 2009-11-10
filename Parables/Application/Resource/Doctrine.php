@@ -248,7 +248,7 @@ class Parables_Application_Resource_Doctrine
                     $path = realpath($subVal);
  
                     if (!is_dir($path)) {
-                        throw new Zend_Application_Resource_Exception("$subVal does not exist");
+                        throw new Zend_Application_Resource_Exception("$subVal does not exist.");
                     }
  
                     $this->_paths[$key][$subKey] = $path;
@@ -258,7 +258,6 @@ class Parables_Application_Resource_Doctrine
 
         return $this;
     }
-     
 
     /**
      * Retrieve paths
@@ -269,7 +268,6 @@ class Parables_Application_Resource_Doctrine
     {
         return $this->_paths;
     }
-     
 
     /**
      * Defined by Zend_Application_Resource_Resource
