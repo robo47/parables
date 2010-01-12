@@ -2,12 +2,19 @@
     convertErrorsToExceptions="true"
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
-    stopOnFailure="true"
+    stopOnFailure="false"
+    stopOnError="false"
     syntaxCheck="true">
 
     <testsuite name="Parables Test Suite">
         <directory>./Parables</directory>
     </testsuite>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../Parables/</directory>
+        </whitelist>
+    </filter>
 
     <logging>
         <log type="coverage-html"

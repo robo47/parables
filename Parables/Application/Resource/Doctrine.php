@@ -80,11 +80,58 @@ class Parables_Application_Resource_Doctrine
     protected function _setConnectionListeners(Doctrine_Connection_Common $conn, array $options)
     {
         foreach ($options as $alias => $class) {
-            if (!class_exists($class)) {
-                throw new Zend_Application_Resource_Exception("$class does not exist.");
-            }
+            $listener = $this->_getListenerInstance($class);
+            $conn->addListener($listener, $alias);
+        }
+    }
 
-            $conn->addListener(new $class(), $alias);
+    /**
+     *
+     * @param array|string $options
+     * @return object
+     */
+    protected function _getListenerInstance($options)
+    {
+        if (is_array($options)) {
+            if(isset($options[0])) {
+                $class = $options[0];
+                if (isset($options[1])) {
+                    $params = $options[1];
+                } else {
+                    $params = array();
+                }
+            } else {
+                throw new Zend_Application_Resource_Exception("invalid options for listener");
+            }
+        } else {
+            $class = $options;
+            $params = array();
+        }
+        try {
+            @Zend_Loader::loadClass($class);
+        } catch (Zend_Exception $e) {
+            throw new Zend_Application_Resource_Exception("$class does not exist.");
+        }
+
+        $refClass = new ReflectionClass($class);
+        if (empty($params)) {
+            $listener = $refClass->newInstance();
+        } else {
+            $listener = $refClass->newInstanceArgs($params);
+        }
+        return $listener;
+    }
+
+    /**
+     *
+     * @param Doctrine_Connection_Common $conn
+     * @param array $options
+     */
+    protected function _setConnectionRecordListeners(Doctrine_Connection_Common $conn, array $options)
+    {
+        foreach ($options as $alias => $class) {
+            $listener = $this->_getListenerInstance($class);
+            $conn->addRecordListener($listener, $alias);
         }
     }
 
@@ -159,7 +206,18 @@ class Parables_Application_Resource_Doctrine
                 return new Doctrine_Cache_Xcache();
 
             default:
-                throw new Zend_Application_Resource_Exception('Unsupported cache driver.');
+                try {
+                    @Zend_Loader::loadClass($options['driver']);
+                } catch (Zend_Exception $e) {
+                    throw new Zend_Application_Resource_Exception("Unsupported cache driver: " . $options['driver']);
+                }
+                $refClass = new ReflectionClass($options['driver']);
+                if (!empty($options['options']) && is_array($options['options'])) {
+                    $driver = $refClass->newInstanceArgs($options['options']);
+                } else {
+                    $driver = $refClass->newInstance();
+                }
+                return $driver;
         }
     }
 
@@ -219,6 +277,15 @@ class Parables_Application_Resource_Doctrine
 
             if (array_key_exists('listeners', $value)) {
                 $this->_setConnectionListeners($conn, $value['listeners']);
+            }
+
+            if (array_key_exists('recordListeners', $value)) {
+                $this->_setConnectionRecordListeners($conn, $value['recordListeners']);
+            }
+
+            if (array_key_exists('charset', $value)) {
+                $charsetListener = new Parables_Doctrine_EventListener_Charset($value['charset']);
+                $conn->addListener($charsetListener, 'charset');
             }
         }
 

@@ -1,1 +1,4 @@
 tests/logs/
+library/Zend
+library/Doctrine
+library/Doctrine.php
