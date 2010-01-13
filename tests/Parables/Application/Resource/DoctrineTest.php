@@ -2,11 +2,6 @@
 
 require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '../../TestHelper.php';
 
-require_once 'Doctrine/Cache/Interface.php';
-require_once 'Doctrine/Cache/Driver.php';
-Zend_Loader_Autoloader::getInstance()
-                      ->setFallbackAutoloader(true);
-
 class Parables_Cache_DoctrineDummy extends Doctrine_Cache_Driver
 {
     public $args = array();
@@ -104,7 +99,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setManager
+     * @covers Parables_Application_Resource_Doctrine::setupManager
      * @covers Parables_Application_Resource_Doctrine::_setAttributes
      */
     public function testInitializationInitializesManager()
@@ -193,9 +188,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -497,9 +493,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -522,9 +519,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -547,9 +545,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -573,9 +572,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -601,9 +601,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -629,9 +630,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -657,9 +659,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -686,9 +689,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -711,9 +715,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -737,9 +742,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -748,7 +754,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnections()
     {
@@ -830,7 +836,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Parables_Application_Resource_Doctrine::_getCache
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnectionApcQueryCache()
     {
@@ -864,7 +870,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
     /**
      * @covers Parables_Application_Resource_Doctrine::_getCache
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnectionDbQueryCache()
     {
@@ -903,7 +909,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Parables_Application_Resource_Doctrine::_getCache
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnectionMemcacheQueryCache()
     {
@@ -945,7 +951,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
     /**
      * @covers Parables_Application_Resource_Doctrine::_getCache
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnectionXcacheQueryCache()
     {
@@ -980,7 +986,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Parables_Application_Resource_Doctrine::_getCache
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnectionApcResultCache()
     {
@@ -1015,7 +1021,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Parables_Application_Resource_Doctrine::_getCache
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnectionDbResultCache()
     {
@@ -1054,7 +1060,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Parables_Application_Resource_Doctrine::_getCache
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnectionMemcacheResultCache()
     {
@@ -1097,7 +1103,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers Parables_Application_Resource_Doctrine::_getCache
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnectionXcacheResultCache()
     {
@@ -1146,9 +1152,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -1157,7 +1164,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testPassingUndefinedDsnShouldRaiseException()
     {
@@ -1167,9 +1174,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -1178,7 +1186,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testPassingInvalidDsnShouldRaiseException()
     {
@@ -1190,9 +1198,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -1238,7 +1247,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
      */
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setPaths
+     * @covers Parables_Application_Resource_Doctrine::setupPaths
      */
     public function testPassingNonexistentPathShouldRaiseException()
     {
@@ -1250,9 +1259,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -1261,7 +1271,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setPaths
+     * @covers Parables_Application_Resource_Doctrine::setupPaths
      */
     public function testPassingCorrectPathOptionsAndGettingThem()
     {
@@ -1284,7 +1294,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_setConnectionListeners
      * @covers Parables_Application_Resource_Doctrine::_getListenerInstance
      */
@@ -1313,7 +1323,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_setConnectionListeners
      * @covers Parables_Application_Resource_Doctrine::_getListenerInstance
      */
@@ -1345,7 +1355,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_setConnectionRecordListeners
      * @covers Parables_Application_Resource_Doctrine::_getListenerInstance
      */
@@ -1374,7 +1384,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_setConnectionRecordListeners
      * @covers Parables_Application_Resource_Doctrine::_getListenerInstance
      */
@@ -1422,10 +1432,11 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
                 ),
             ),
         );
+        
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
 
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -1451,9 +1462,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
         try {
-            $resource = new Parables_Application_Resource_Doctrine($options);
-            $resource->setBootstrap($this->bootstrap);
             $resource->init();
             $this->fail('No exception thrown');
         } catch(Zend_Application_Resource_Exception $e) {
@@ -1462,7 +1474,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setManager
+     * @covers Parables_Application_Resource_Doctrine::setupManager
      * @covers Parables_Application_Resource_Doctrine::_getCache
      */
     public function testInitializationInitializesManagerSelfWrittenQueryCache()
@@ -1491,7 +1503,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setManager
+     * @covers Parables_Application_Resource_Doctrine::setupManager
      * @covers Parables_Application_Resource_Doctrine::_getCache
      */
     public function testInitializationInitializesManagerSelfWrittenQueryCacheWithOptions()
@@ -1528,7 +1540,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_getCache
      */
     public function testInitializationInitializesManagerSelfWrittenResultCache()
@@ -1557,7 +1569,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setManager
+     * @covers Parables_Application_Resource_Doctrine::setupManager
      * @covers Parables_Application_Resource_Doctrine::_getCache
      */
     public function testInitializationInitializesManagerSelfWrittenResultCacheWithOptions()
@@ -1594,7 +1606,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testSettingCharsetAddsTheCharsetListener()
     {
@@ -1622,7 +1634,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_getCache
      */
     public function testInitializationInitializesConnectionSelfWrittenQueryCache()
@@ -1655,7 +1667,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_getCache
      */
     public function testInitializationInitializesConnectionSelfWrittenQueryCacheWithOptions()
@@ -1696,7 +1708,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_getCache
      */
     public function testInitializationInitializesConnectionSelfWrittenResultCache()
@@ -1729,7 +1741,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Parables_Application_Resource_Doctrine::setConnections
+     * @covers Parables_Application_Resource_Doctrine::setupConnections
      * @covers Parables_Application_Resource_Doctrine::_getCache
      */
     public function testInitializationInitializesConnectionSelfWrittenResultCacheWithOptions()
@@ -1767,5 +1779,26 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $expectedOptions = $options['connections']['demo']['attributes']['attr_result_cache']['options'];
 
         $this->assertEquals($expectedOptions, $cache->args, 'Options passed to Cache constructor don\'t match');
+    }
+
+
+    /**
+     * @covers Parables_Application_Resource_Doctrine::init
+     */
+    public function testUsingCompiledVersion()
+    {
+        $options = array(
+            'compiled' => dirname(dirname(__FILE__)) . '/_files/Doctrine.compiled.php',
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
+
+        $this->assertFalse(class_exists('Doctrine_Compiled_Test_Class', false), 'Class Doctrine_Compiled_Test_Class is already declared');
+
+        $resource->init();
+
+        $this->assertTrue(class_exists('Doctrine_Compiled_Test_Class', false), 'Class Doctrine_Compiled_Test_Class  is not declaed but should be');
     }
 }

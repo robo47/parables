@@ -1,4 +1,5 @@
 <?php
+
 class Parables_Application_Resource_Doctrine 
     extends Zend_Application_Resource_ResourceAbstract
 {
@@ -227,7 +228,7 @@ class Parables_Application_Resource_Doctrine
      * @param   array $options
      * @return  Parables_Application_Resource_Doctrine
      */
-    public function setManager(array $options)
+    public function setupManager(array $options)
     {
         $options = array_change_key_case($options, CASE_LOWER);
 
@@ -248,7 +249,7 @@ class Parables_Application_Resource_Doctrine
      * @return  Parables_Application_Resource_Doctrine
      * @throws  Zend_Application_Resource_Exception
      */
-    public function setConnections(array $options)
+    public function setupConnections(array $options)
     {
         $options = array_change_key_case($options, CASE_LOWER);
 
@@ -299,7 +300,7 @@ class Parables_Application_Resource_Doctrine
      * @return  Parables_Application_Resource_Doctrine
      * @throws  Zend_Application_Resource_Exception
      */
-    protected function setPaths(array $options)
+    protected function setupPaths(array $options)
     {
         $options = array_change_key_case($options, CASE_LOWER);
 
@@ -344,10 +345,21 @@ class Parables_Application_Resource_Doctrine
      */
     public function init()
     {
-        if (1 !== (int) substr(Doctrine::VERSION, 0, 1)) {
-            throw new Zend_Application_Resource_Exception('Doctrine version > 1.x not yet supported.');
+        if (isset($this->_options['compiled'])) {
+            require $this->_options['compiled'];
+        }
+        
+        if (isset($this->_options['paths'])) {
+            $this->setupPaths($this->_options['paths']);
         }
 
+        if (isset($this->_options['manager'])) {
+            $this->setupManager($this->_options['manager']);
+        }
+        
+        if (isset($this->_options['connections'])) {
+            $this->setupConnections($this->_options['connections']);
+        }
         return $this;
     }
 }
