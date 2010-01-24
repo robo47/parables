@@ -4,6 +4,12 @@ class Parables_Application_Resource_Doctrine
     extends Zend_Application_Resource_ResourceAbstract
 {
     /**
+     * @var Doctrine_Cli
+     */
+    protected $_cli = null;
+
+    /**
+     *
      * @var array
      */
     protected $_paths = array();
@@ -283,7 +289,7 @@ class Parables_Application_Resource_Doctrine
             if (array_key_exists('recordListeners', $value)) {
                 $this->_setConnectionRecordListeners($conn, $value['recordListeners']);
             }
-
+            
             if (array_key_exists('charset', $value)) {
                 $charsetListener = new Parables_Doctrine_EventListener_Charset($value['charset']);
                 $conn->addListener($charsetListener, 'charset');
@@ -303,27 +309,22 @@ class Parables_Application_Resource_Doctrine
     protected function setupPaths(array $options)
     {
         $options = array_change_key_case($options, CASE_LOWER);
-
         foreach ($options as $key => $value) {
             if (!is_array($value)) {
                 throw new Zend_Application_Resource_Exception("Invalid paths on $key.");
             }
-
             $this->_paths[$key] = array();
- 
-            foreach ($value as $subKey => $subVal) {
+             foreach ($value as $subKey => $subVal) {
                 if (!empty($subVal)) {
                     $path = realpath($subVal);
- 
+
                     if (!is_dir($path)) {
                         throw new Zend_Application_Resource_Exception("$subVal does not exist.");
                     }
- 
                     $this->_paths[$key][$subKey] = $path;
                 }
             }
         }
-
         return $this;
     }
 
@@ -335,6 +336,24 @@ class Parables_Application_Resource_Doctrine
     public function getPaths()
     {
         return $this->_paths;
+    }
+
+    /**
+     * Initializes cli
+     * @param array $options
+     */
+    protected function setupCli(array $options)
+    {
+        if (!isset($options['config'])) {
+            throw new Zend_Application_Resource_Exception('No config for cli found');
+        }
+        $config = $options['config'];
+
+        $this->_cli = new Doctrine_Cli($config);
+
+        if (isset($options['registryKey'])) {
+            Zend_Registry::set($options['registryKey'], $this->_cli);
+        }
     }
 
     /**
@@ -360,6 +379,15 @@ class Parables_Application_Resource_Doctrine
         if (isset($this->_options['connections'])) {
             $this->setupConnections($this->_options['connections']);
         }
+
+        if (isset($this->_options['cli'])) {
+            $this->setupCli($this->_options['cli']);
+        }
         return $this;
+    }
+
+    public function getCli()
+    {
+        return $this->_cli;
     }
 }

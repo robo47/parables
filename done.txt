@@ -1,0 +1,1 @@
+Support for setting up the Doctrine_Cli and saving it to Zend_Registry

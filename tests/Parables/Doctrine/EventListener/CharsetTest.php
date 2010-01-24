@@ -82,6 +82,9 @@ class Parables_Doctrine_EventListener_CharsetTest extends PHPUnit_Framework_Test
     }
 
     /**
+     * This unittest will fail on a mysql/pgsql-connection because of
+     * http://www.doctrine-project.org/jira/browse/DC-434
+     *
      * @covers Parables_Doctrine_EventListener_Charset::postConnect
      */
     public function testSettingCharsetOnConnectionAfterConnect()

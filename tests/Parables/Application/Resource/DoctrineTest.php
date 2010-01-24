@@ -99,6 +99,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Parables_Application_Resource_Doctrine::init
      * @covers Parables_Application_Resource_Doctrine::setupManager
      * @covers Parables_Application_Resource_Doctrine::_setAttributes
      */
@@ -754,6 +755,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Parables_Application_Resource_Doctrine::init
      * @covers Parables_Application_Resource_Doctrine::setupConnections
      */
     public function testInitializationInitializesConnections()
@@ -1432,7 +1434,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
                 ),
             ),
         );
-        
+
         $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
 
@@ -1800,5 +1802,82 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $resource->init();
 
         $this->assertTrue(class_exists('Doctrine_Compiled_Test_Class', false), 'Class Doctrine_Compiled_Test_Class  is not declaed but should be');
+    }
+
+    /**
+     * @covers Parables_Application_Resource_Doctrine::setupCli
+     * @covers Parables_Application_Resource_Doctrine::getCli
+     * @covers Parables_Application_Resource_Doctrine::init
+     */
+    public function testInitializeDoctrineCli()
+    {
+        $options = array(
+            'cli' => array(
+                'config' => array(
+                    'data_fixtures_path'    =>  TESTS_PATH . 'tmp/doctrine/data/fixtures/',
+                    'models_path'           =>  TESTS_PATH . 'tmp/doctrine/',
+                    'migrations_path'       =>  TESTS_PATH . 'tmp/doctrine/migrations/',
+                    'sql_path'              =>  TESTS_PATH . 'tmp/doctrine/data/sql/',
+                    'yaml_schema_path'      =>  TESTS_PATH . 'tmp/doctrine/schema/',
+                    'generate_models_options' => array (
+                        'generateBaseClasses'   =>  true,
+                        'generateTableClasses'  =>  true,
+                        'pearStyle'             =>  true,
+                    ),
+                ),
+            )
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $cli = $resource->getCli();
+        /* @var $cli Doctrine_Cli */
+        $this->assertType('Doctrine_Cli', $cli);
+        $this->assertEquals($options['cli']['config'], $cli->getConfig());
+    }
+
+    /**
+     * @covers Parables_Application_Resource_Doctrine::setupCli
+     */
+    public function testInitializeDoctrineCliWithRegisteringInTheRegistry()
+    {
+        $options = array(
+            'cli' => array(
+                'config' => array(),
+                'registryKey' => 'Doctrine_Cli',
+            )
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+        $resource->init();
+
+        $this->assertTrue(Zend_Registry::isRegistered('Doctrine_Cli'));
+        $cli = Zend_Registry::get('Doctrine_Cli');
+        /* @var $cli Doctrine_Cli */
+        $this->assertType('Doctrine_Cli', $cli);
+        $this->assertEquals(array(), $cli->getConfig());
+    }
+
+    /**
+     * @covers Parables_Application_Resource_Doctrine::setupCli
+     */
+    public function testPassingNoConfigForDoctrineCliShouldRaiseException()
+    {
+        $options = array(
+            'cli' => array()
+        );
+
+        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource->setBootstrap($this->bootstrap);
+
+        try {
+            $resource->init();
+            $this->fail('No exception thrown');
+        } catch(Zend_Application_Resource_Exception $e) {
+            $this->assertEquals('No config for cli found', $e->getMessage(), 'Thrown exception has wrong message');
+        }
     }
 }
